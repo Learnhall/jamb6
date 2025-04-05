@@ -240,7 +240,10 @@ $(document).on("click", 'a[href^="#"]', function (event) {
     var input = "";
     for (var i = 0; i < questions[index].choices.length; i++) {
       item = $("<li>");
-      input = '<label><input data-focusable type="radio" name="answer" value=' + i + " />";
+      input =
+        '<label><input data-focusable type="radio" name="answer" value=' +
+        i +
+        " />";
       input += questions[index].choices[i];
       input += "</label>";
       item.append(input);
@@ -262,13 +265,14 @@ $(document).on("click", 'a[href^="#"]', function (event) {
       return; // Do nothing if it's an arrow key
     }
 
-
     // Check for the 'Tab' key
-    if (e.key === 'Tab') {
+    if (e.key === "Tab") {
       e.preventDefault();
 
       // Create an array of focusable elements
-      const focusableElements = Array.from(document.querySelectorAll("[data-focusable]")).filter((el) => el.offsetParent !== null);
+      const focusableElements = Array.from(
+        document.querySelectorAll("[data-focusable]")
+      ).filter((el) => el.offsetParent !== null);
 
       // Identify the current active element
       const activeElement = document.activeElement;
@@ -276,12 +280,11 @@ $(document).on("click", 'a[href^="#"]', function (event) {
       // Find the index of the currently active element in the focusable elements array
       let currentIndex = focusableElements.indexOf(activeElement);
 
-
       if (currentIndex === -1 || currentIndex >= focusableElements.length - 1) {
         currentIndex = -1;
       }
 
-      if (currentIndex === -1){
+      if (currentIndex === -1) {
         focusableElements[0].focus();
         return;
       }
@@ -290,7 +293,9 @@ $(document).on("click", 'a[href^="#"]', function (event) {
 
       if (e.shiftKey) {
         // If Shift + Tab, move backward in the array
-        nextIndex = (currentIndex - 1 + focusableElements.length) % focusableElements.length;
+        nextIndex =
+          (currentIndex - 1 + focusableElements.length) %
+          focusableElements.length;
       } else {
         // If Tab, move forward in the array
         nextIndex = (currentIndex + 1) % focusableElements.length;
@@ -300,11 +305,12 @@ $(document).on("click", 'a[href^="#"]', function (event) {
       focusableElements[nextIndex].focus();
     }
 
-
     // Check for the 'Enter' key (keyCode 13)
     if (e.key === "Enter" || e.keyCode === 13) {
       // Create an array of focusable elements
-      const focusableElements = Array.from(document.querySelectorAll("[data-focusable]")).filter((el) => el.offsetParent !== null);
+      const focusableElements = Array.from(
+        document.querySelectorAll("[data-focusable]")
+      ).filter((el) => el.offsetParent !== null);
       // Checks if active elements are in focusable elements
       const activeElement = document.activeElement;
       if (focusableElements.includes(activeElement)) {
@@ -321,7 +327,10 @@ $(document).on("click", 'a[href^="#"]', function (event) {
         // If a radio button is not selected, show the warning
         if (options.length === 0) {
           swal(
-              "Please make a selection.", "Choose the best answer before continuing.", "warning");
+            "Please make a selection.",
+            "Choose the best answer before continuing.",
+            "warning"
+          );
         } else {
           // Proceed to the next question
           $("#next").click(); // Simulate click on the 'Next' button
@@ -350,6 +359,12 @@ $(document).on("click", 'a[href^="#"]', function (event) {
         selections[questionCounter] = optionIndex;
       }
     }
+
+    if (e.key === "Space" || e.keyCode === 32) {
+      // Dismiss the SweetAlert
+      swal.close();
+    }
+
     if (e.key != "Tab") {
       const focusedElement = document.activeElement;
       if (focusedElement && focusedElement.offsetParent !== null) {
@@ -470,34 +485,25 @@ $(document).on("click", 'a[href^="#"]', function (event) {
     return score;
   }
   function getScore() {
-
     let numCorrect = 0;
 
     for (let i = 0; i < selections.length; i++) {
-
       if (selections[i] === questions[i].correctAnswer) {
-
         numCorrect++;
-
       }
-
     }
 
     return numCorrect;
-
   }
-
 
   // Computes score and returns a paragraph element to be displayed
 
   function generateResultsPage() {
-
     // Calculate score
 
     const score = getScore();
 
     const totalQuestions = questions.length;
-
 
     // Start building HTML content
 
@@ -846,15 +852,12 @@ $(document).on("click", 'a[href^="#"]', function (event) {
 
           `;
 
-
     // Generate results for each question
 
     questions.forEach((question, index) => {
-
       const userAnswer = selections[index];
 
       const isCorrect = userAnswer === question.correctAnswer;
-
 
       // Start question div
 
@@ -863,29 +866,22 @@ $(document).on("click", 'a[href^="#"]', function (event) {
                   <div class="question">
 
                       <h3>Question ${index + 1}: ${
-
-          question.qType || "Question"
-
+        question.qType || "Question"
       }</h3>
 
                       <p>${question.question}</p>
 
               `;
 
-
       // Add image if exists
 
       if (question.image) {
-
         html += `<img src="${question.image}" alt="Question Image" class="question-image">`;
-
       }
-
 
       // Add audio if exists
 
       if (question.audio) {
-
         html += `
 
                       <audio controls>
@@ -897,30 +893,22 @@ $(document).on("click", 'a[href^="#"]', function (event) {
                       </audio>
 
                   `;
-
       }
-
 
       // Generate choices
 
       html += `<div class="choices">`;
 
       question.choices.forEach((choice, choiceIndex) => {
-
         let choiceClass = "";
 
         if (choiceIndex === question.correctAnswer) {
-
           choiceClass = "correct"; // Always highlight correct answer in green
-
         }
 
         if (choiceIndex === userAnswer) {
-
           choiceClass += isCorrect ? " correct" : " incorrect";
-
         }
-
 
         html += `
 
@@ -931,16 +919,13 @@ $(document).on("click", 'a[href^="#"]', function (event) {
                       </div>
 
                   `;
-
       });
 
       html += `</div>`;
 
-
       // Add explanation if the answer was incorrect
 
       if (question.explanation) {
-
         html += `
 
                       <div class="explanation">
@@ -950,14 +935,10 @@ $(document).on("click", 'a[href^="#"]', function (event) {
                       </div>
 
                   `;
-
       }
 
-
       html += `</div>`; // Close question div
-
     });
-
 
     // Close HTML
 
@@ -975,7 +956,6 @@ $(document).on("click", 'a[href^="#"]', function (event) {
 
           `;
 
-
     // Open results in a new window
 
     const resultsWindow = window.open("", "_blank");
@@ -983,6 +963,5 @@ $(document).on("click", 'a[href^="#"]', function (event) {
     resultsWindow.document.write(html);
 
     resultsWindow.document.close();
-
   }
 })();
